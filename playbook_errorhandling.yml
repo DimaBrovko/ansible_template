@@ -1,0 +1,30 @@
+---
+- name: ansible
+  host: all
+  any_errors_fatal: true
+  become: yes
+
+  task:
+  - name: task number 1
+    yum: name=treeeew state=latest
+    ignore_errors: yes
+
+  - name: task number 2
+    shell: ls -la /etc/
+    register: results
+    failed_when: results.rc == 0
+
+  - debug:
+      var: results
+
+  - name: task number 3
+    shell: echo Dia
+    register: results2
+    failed_when: "'Dia' in results2.stdout"
+
+  - debug:
+      var: results3
+
+  - name: task number 3
+    shell: cat /home/ec2-user/myfile.txt
+    register: results3

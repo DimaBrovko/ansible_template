@@ -1,0 +1,67 @@
+---
+- name: My Playbbok
+  hosts: all
+  become: yes
+
+  vars:
+    mytext: "Privet"
+
+  tasks:
+  - name: Ping Test
+    ping:
+
+  - name: Unregister Server from Load Balancer
+    shell: echo This..... {{ inventory_hostname }}, node name {{ ansible_nodename }} >> /home/log.txt
+    delegate_to: 127.0.0.1
+
+  - name: Create flders
+    include: create_folders.yml
+
+  - name: Create files
+    import: create_files.yml mytext="Hello"
+
+  - name: Reboot servers
+    shell: sleep 3 && rebbot now
+    async: 1
+    poll: 0
+
+  -name: Update my Database
+   shell: echo Updating ...
+   run_once: true
+   delegate_to: db
+
+  - name: Wait till my servers will come up
+    wait_for:
+      host: "{{ inventory_hostname }}"
+      state: started
+      delay: 5
+      timeout: 40
+    delegate_to: master 127.0.0.1
+
+  #- name: Create folde1
+  #  file:
+  #    path: /home/secret/folder1
+  #    state: directory
+  #    mode: 0755
+
+  #- name: Create folde2
+  #  file:
+  #    path: /home/secret/folder2
+  #    state: directory
+  #    mode: 0755
+
+  #- name: Create file1
+  #  copy:
+  #    dest: /home/secret/label.txt
+  #    content: |
+  #     Text Lines 1 in files
+  #     Text Lines 2 in files
+  #     Text Lines 2 {{ mytext }}
+  #  delegate_to: linux3
+
+  #- name: Create file1
+  #  copy:
+  #    dest: /home/secret/label.txt
+  #    content: |
+  #      Text Lines 2 in files
+  #      Text Lines 2 {{ mytext }}

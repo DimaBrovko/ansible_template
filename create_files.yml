@@ -1,0 +1,16 @@
+---
+- name: Create file1
+  copy:
+    dest: /home/secret/label.txt
+    content: |
+     Text Lines 1 in files
+     Text Lines 2 in files
+     Text Lines 2 {{ mytext }}
+
+- name: Create file1
+  copy:
+    dest: /home/secret/label.txt
+    content: |
+      Text Lines 1 in files
+      Text Lines 2 in files
+      Text Lines 2 {{ mytext }}
